@@ -22,7 +22,6 @@ public class ProductInfoService {
         try {
             Document doc = webScraperService.scrapeWebPage(url);
 
-            // More flexible selectors with fallback mechanisms
             productInfo.setName(extractText(doc,
                     "h1.product-title",
                     "h1#product-name",
@@ -46,7 +45,6 @@ public class ProductInfoService {
 
             productInfo.setImageUrl(extractImageUrl(doc));
 
-            // Log extracted information for debugging
             logger.info("Extracted Product Info: {}", productInfo);
 
             return productInfo;
@@ -56,14 +54,12 @@ public class ProductInfoService {
         }
     }
 
-    // Flexible text extraction method
     private String extractText(Document doc, String... selectors) {
         for (String selector : selectors) {
             Elements elements = doc.select(selector);
             if (!elements.isEmpty()) {
                 Element element = elements.first();
 
-                // Different extraction strategies based on element type
                 switch (selector) {
                     case "meta[name='description']":
                         return element.attr("content");
@@ -77,7 +73,6 @@ public class ProductInfoService {
         return "Not Available";
     }
 
-    // Flexible image URL extraction
     private String extractImageUrl(Document doc) {
         String[] imageSelectors = {
                 "img.product-image",
@@ -92,7 +87,6 @@ public class ProductInfoService {
             if (!images.isEmpty()) {
                 Element image = images.first();
 
-                // Different attribute extraction based on selector
                 switch (selector) {
                     case "meta[property='og:image']":
                         return image.attr("content");
